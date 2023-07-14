@@ -1,4 +1,5 @@
 
-fastapi==0.63.*
-uvicorn==0.16.*
-mangum==0.11.0
+fastapi==0.100.*
+uvicorn==0.22.*
+mangum==0.17.0
+python-dotenv==1.0.0
