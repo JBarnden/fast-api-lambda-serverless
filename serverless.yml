@@ -14,7 +14,10 @@ provider:
   runtime: python3.9
   region: ${env:AWS_REGION, "eu-west-1"}
   stage: ${opt:stage, "staging"}
+  lambdaHashingVersion: "20201221"
   environment:
+    # Global environment variables added to all functions, favour function specific assignment
+    # unless the variable really should be globally shared
     STAGE: ${self:provider.stage}
 
 plugins:
@@ -24,6 +27,7 @@ plugins:
 
 custom:
   environment:
+    # Define environment variables here that we can reference in one or more specific functions
     DEMO_ENVIRONMENT_VARIABLE: ${env:DEMO_ENVIRONMENT_VARIABLE}
 
   dotenv:
@@ -41,6 +45,7 @@ custom:
 
   pythonRequirements:
     dockerizePip: true
+    useDownloadCache: false
     layer:
       name: dependency-layer
       description: Lambda layer containing dependencies
@@ -67,7 +72,8 @@ functions:
     handler: main.handler
     environment:
       STAGE: ${self:provider.stage}
-      # Using references in function specific env vars, see "[3] Not all environment variables have to be global" in article
+      # Using references in function specific env vars,
+      # see "[3] Not all environment variables have to be global" in article
       DEMO_ENVIRONMENT_VARIABLE: ${self:custom.environment.DEMO_ENVIRONMENT_VARIABLE}
     layers:
       - { Ref: PythonRequirementsLambdaLayer }
