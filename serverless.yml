@@ -1,14 +1,24 @@
+# Good article for serverless.yml best practices:
+# https://dev.to/awscommunity-asean/best-practices-in-serverless-framework-app-deployments-1nn8
+#
+# ================
 
 service: my-awesome-app
+useDotenv: true
 
 package:
   individually: true
 
 provider:
   name: aws
-  runtime: python3.8
+  runtime: python3.9
   region: ${env:AWS_REGION, "eu-west-1"}
-  stage: ${opt:stage, "v0"}
+  stage: ${opt:stage, "staging"}
+  lambdaHashingVersion: "20201221"
+  environment:
+    # Global environment variables added to all functions, favour function specific assignment
+    # unless the variable really should be globally shared
+    STAGE: ${self:provider.stage}
 
 plugins:
   - serverless-python-requirements
@@ -16,8 +26,13 @@ plugins:
   - serverless-dotenv-plugin
 
 custom:
+  environment:
+    # Define environment variables here that we can reference in one or more specific functions
+    DEMO_ENVIRONMENT_VARIABLE: ${env:DEMO_ENVIRONMENT_VARIABLE}
+
   dotenv:
     include: []
+
   customDomain:
     domainName: ${env:BASE_URL, "test-api.jagetech.com"}
     stage: ${self:provider.stage}
@@ -27,31 +42,39 @@ custom:
     apiType: rest
     autoDomain: true
     autoDomainWaitFor: 120
+
   pythonRequirements:
     dockerizePip: true
+    useDownloadCache: false
     layer:
-      name: my-awesome-app-layer
-      description: My awesome app layer
+      name: dependency-layer
+      description: Lambda layer containing dependencies
       compatibleRuntimes:
-        - python3.8
+        - python3.9
 
 functions:
   app:
     package:
       include:
         - "main.py"
+
       exclude:
         - "requirements.txt"
+        - "requirements-dev.txt"
         - "package.json"
         - "package-lock.json"
         - ".serverless/**"
         - ".venv/**"
         - ".virtualenv/**"
         - "node_modules/**"
+        - ".env*"
 
     handler: main.handler
     environment:
       STAGE: ${self:provider.stage}
+      # Using references in function specific env vars,
+      # see "[3] Not all environment variables have to be global" in article
+      DEMO_ENVIRONMENT_VARIABLE: ${self:custom.environment.DEMO_ENVIRONMENT_VARIABLE}
     layers:
       - { Ref: PythonRequirementsLambdaLayer }
     events:
