@@ -40,12 +40,3 @@ With credentials configured, run:
 
 - `sls remove --stage staging`
 - Manually remove the certificate you created for your domain
-
-## Serverless notes
-
-Tested and developed with Serverless v2.
-
-**Serverless gotcha with Windows WSL2 Debian:** Had to make a manual change to a line of code in `node_modules/serverless-python-requirements/lib/docker.js` to get deployments working, [see here](https://github.com/serverless/serverless-python-requirements/issues/371)
-
-- Once deployed, your API will be available at the `BASE_URL` specified e.g. `https://api.example.com/`
-- Access docs at `https://api.example.com/docs` and other endpoints by replacing `docs` with your endpoints.
