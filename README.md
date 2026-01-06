@@ -1,3 +1,5 @@
+> **_NOTE:_**  This will no longer be maintained since serverless.com has moved to being a subscription service requiring authentication to interact with it.  I'll be looking for an alternative and posting another article.
+
 # FastAPI Serverless AWS API Template
 
 Based on https://adem.sh/blog/tutorial-fastapi-aws-lambda-serverless

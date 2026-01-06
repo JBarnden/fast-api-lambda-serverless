@@ -11,7 +11,7 @@ package:
 
 provider:
   name: aws
-  runtime: python3.9
+  runtime: python3.13
   region: ${env:AWS_REGION, "eu-west-1"}
   stage: ${opt:stage, "staging"}
   lambdaHashingVersion: "20201221"
@@ -50,7 +50,7 @@ custom:
       name: dependency-layer
       description: Lambda layer containing dependencies
       compatibleRuntimes:
-        - python3.9
+        - python3.13
 
 functions:
   app:

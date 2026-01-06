@@ -3,8 +3,8 @@
     "version": "1.0.0",
     "author": "<YOUR_NAME>",
     "dependencies": {
-        "serverless": "2.72.4",
-        "serverless-domain-manager": "^7.0.4",
+        "serverless": "^3.40.0",
+        "serverless-domain-manager": "^8.0.0",
         "serverless-dotenv-plugin": "^6.0.0",
         "serverless-python-requirements": "^6.0.0"
     }
